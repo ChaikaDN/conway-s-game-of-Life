@@ -12,6 +12,16 @@ def draw_grid(screen, cell_size, screen_size):
         pygame.draw.line(screen, black, (0, posy), (width, posy))
 
 
+def print_text(screen, message, font_size, position):
+    font = pygame.font.SysFont('Impact', font_size)
+    text = font.render(message, True, black)
+    back_rect = text.get_rect()
+    position_center = [coord - rect_coord for coord, rect_coord in zip(position, back_rect.center)]
+    back_rect.center = position
+    pygame.draw.rect(screen, white, back_rect)
+    screen.blit(text, position_center)
+
+
 def count_neighbors(objects, position):
     count = 0
     neighbors = (-1, 1), (0, 1), (1, 1), (-1, 0), (1, 0), (-1, -1), (0, -1), (1, -1)
@@ -53,15 +63,18 @@ def main():
 
     while True:
         events.track()
-        screen.fill(white)
-        if dimension < grid_rate:
-            draw_grid(screen, cell_size, size)
+        if events.is_running:
+            screen.fill(white)
+            if dimension < grid_rate:
+                draw_grid(screen, cell_size, size)
 
-        for i, row in enumerate(cells):
-            for j, cell in enumerate(row):
-                draw_cell(screen, cell, (i, j), cell_size)
+            for i, row in enumerate(cells):
+                for j, cell in enumerate(row):
+                    draw_cell(screen, cell, (i, j), cell_size)
 
-        cells = refresh(cells)
+            cells = refresh(cells)
+        else:
+            print_text(screen, 'PAUSED', 50, screen.get_rect().center)
 
         pygame.display.flip()
         clock.tick(fps)
