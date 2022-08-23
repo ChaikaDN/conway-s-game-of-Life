@@ -27,8 +27,8 @@ def count_neighbors(objects, position):
     neighbors = (-1, 1), (0, 1), (1, 1), (-1, 0), (1, 0), (-1, -1), (0, -1), (1, -1)
     for i, j in neighbors:
         try:
-            i1 = position[0] + i
-            j1 = position[1] + j
+            i1 = (position[0] + i) % dimension
+            j1 = (position[1] + j) % dimension
             if objects[i1][j1]:
                 count += 1
         except IndexError:
